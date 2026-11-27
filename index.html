@@ -73,6 +73,44 @@
     .pulse-ring { animation: pulseRing 1.8s ease-out infinite; }
     /* 圖片載入失敗時的佔位底色 */
     img.img-fallback { background: linear-gradient(135deg, #E4D6C1, #F3D3B0); }
+    /* 3D 巷口街景 */
+    .st3d {
+      position: relative; height: 420px; overflow: hidden; border-radius: 1.5rem; isolation: isolate;
+      background: linear-gradient(180deg, #2A1C14 0%, #5E3526 30%, #B5653A 58%, #E9A066 78%, #F4C48E 100%);
+      box-shadow: 0 10px 30px -12px rgba(62, 42, 31, .35);
+    }
+    @media (min-width: 640px) { .st3d { height: 480px; } }
+    @media (min-width: 1024px) { .st3d { height: 560px; border-radius: 2rem; } }
+    .st3d-stage { position: absolute; inset: 0; }
+    .st3d-stage canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease; touch-action: pan-y; }
+    .st3d[data-state="ready"] .st3d-stage canvas { opacity: 1; }
+    .st3d-status {
+      position: absolute; inset: 0; display: grid; place-items: center; padding: 1rem; text-align: center;
+      color: rgba(247, 241, 232, .85); font-size: .875rem; letter-spacing: .15em; pointer-events: none; transition: opacity .6s ease;
+    }
+    .st3d-status span { display: none; }
+    .st3d[data-state="idle"] .st3d-loading, .st3d[data-state="loading"] .st3d-loading { display: inline; animation: st3dPulse 1.6s ease-in-out infinite; }
+    .st3d[data-state="error"] .st3d-error { display: inline; }
+    .st3d[data-state="ready"] .st3d-status { opacity: 0; }
+    @keyframes st3dPulse { 50% { opacity: .45; } }
+    .st3d-hint {
+      position: absolute; left: 1rem; bottom: 1rem; z-index: 2; margin: 0; padding: .35rem .8rem; border-radius: 999px;
+      background: rgba(42, 28, 20, .55); color: #F7F1E8; font-size: .75rem; letter-spacing: .08em;
+      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: 0; transition: opacity .6s ease; pointer-events: none;
+    }
+    .st3d[data-state="ready"] .st3d-hint { opacity: 1; }
+    .st3d.is-interacted .st3d-hint { opacity: 0; }
+    .st3d-bubble {
+      position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; white-space: nowrap;
+      padding: .2rem .65rem; border-radius: 999px; background: #fff; color: #3E2A1F; font-size: 12px; font-weight: 700;
+      box-shadow: 0 6px 16px -6px rgba(42, 28, 20, .55); animation: st3dSay 2.4s ease both;
+    }
+    .st3d-bubble::after {
+      content: ""; position: absolute; left: 50%; bottom: -4px; width: 9px; height: 9px; border-radius: 2px;
+      background: #fff; transform: translateX(-50%) rotate(45deg);
+    }
+    @keyframes st3dSay { 0% { opacity: 0; scale: .7; } 12% { opacity: 1; scale: 1; } 82% { opacity: 1; } 100% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .st3d-status span { animation: none !important; } }
   </style>
 </head>
 
@@ -181,6 +219,28 @@
       <a href="#story" class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-xs tracking-widest text-wood/60 md:flex" aria-label="向下捲動">
         SCROLL <i data-lucide="chevron-down" class="h-4 w-4 animate-bounce"></i>
       </a>
+    </section>
+
+    <!-- =========================================================
+         巷口街景：3D 動畫（人來人往、走進店裡、外帶排隊）
+    ========================================================== -->
+    <section id="street" class="pt-16 lg:pt-20" aria-labelledby="streetTitle">
+      <div class="mx-auto max-w-7xl px-5 lg:px-8">
+        <div class="reveal text-center">
+          <p class="text-sm font-bold tracking-[0.3em] text-ember">EVERY DAY</p>
+          <h2 id="streetTitle" class="mt-3 font-serif text-3xl font-black sm:text-4xl">巷口飄香，人來人往</h2>
+          <p class="mx-auto mt-4 max-w-xl leading-relaxed text-wood/70">從開門到打烊，客人一個接一個走進店裡、在外帶窗口排隊——排隊的人潮，就是我們最好的招牌。</p>
+        </div>
+        <div id="street3d" class="st3d reveal mt-10" data-state="idle" role="img"
+             aria-label="3D 動畫：黃昏的金煎堂門口人來人往，客人走進店裡用餐，也有人在外帶窗口排隊，買完鍋貼提著外帶袋離開">
+          <div class="st3d-stage"></div>
+          <div class="st3d-status" aria-hidden="true">
+            <span class="st3d-loading">3D 街景載入中…</span>
+            <span class="st3d-error">此裝置暫時無法顯示 3D 動畫</span>
+          </div>
+          <p class="st3d-hint" aria-hidden="true"></p>
+        </div>
+      </div>
     </section>
 
     <!-- =========================================================
@@ -1371,5 +1431,7 @@
     refreshIcons();
   })();
   </script>
+  <!-- 3D 巷口街景（Three.js，捲動到附近才載入） -->
+  <script type="module" src="js/street3d.js"></script>
 </body>
 </html>
