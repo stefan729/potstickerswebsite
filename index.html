@@ -6,6 +6,17 @@
   <title>金煎堂 JIN JIAN TANG｜極簡現代鍋貼專賣</title>
   <meta name="description" content="金煎堂鍋貼專賣：台灣在地豬肉、每日現包、現點現煎。線上點餐、冷凍禮盒宅配、門市據點資訊。" />
 
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#2A1C14" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="金煎堂" />
+
   <!-- Google Fonts：典雅標題 Noto Serif TC／無襯線內文 Noto Sans TC -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1433,5 +1444,11 @@
   </script>
   <!-- 3D 巷口街景（Three.js，捲動到附近才載入） -->
   <script type="module" src="js/street3d.js"></script>
+  <!-- PWA：註冊 Service Worker（可加到主畫面、離線瀏覽） -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
+  </script>
 </body>
 </html>
