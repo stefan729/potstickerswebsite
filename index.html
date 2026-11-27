@@ -142,12 +142,13 @@
          2. Hero Section
     ========================================================== -->
     <section class="relative flex min-h-[100svh] items-center overflow-hidden bg-wood-dark" aria-label="主視覺">
-      <img src="https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=2000&q=80"
-           alt="金黃酥脆的手工鍋貼" class="img-fallback absolute inset-0 h-full w-full object-cover opacity-70" fetchpriority="high" />
-      <div class="absolute inset-0 bg-gradient-to-r from-wood-dark/95 via-wood-dark/70 to-wood-dark/20"></div>
+      <!-- 背景：海報模糊放大，作為氛圍底圖 -->
+      <img src="images/hero-poster.jpg" alt="" aria-hidden="true"
+           class="img-fallback absolute inset-0 h-full w-full scale-110 object-cover opacity-40 blur-2xl" />
+      <div class="absolute inset-0 bg-gradient-to-r from-wood-dark/95 via-wood-dark/80 to-wood-dark/60"></div>
       <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-cream to-transparent"></div>
 
-      <div class="relative mx-auto w-full max-w-7xl px-5 pb-24 pt-32 lg:px-8">
+      <div class="relative mx-auto grid w-full max-w-7xl items-center gap-12 px-5 pb-24 pt-32 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:px-8">
         <div class="max-w-2xl">
           <p class="reveal mb-5 inline-flex items-center gap-2 rounded-full border border-ember/50 bg-ember/10 px-4 py-1.5 text-xs font-medium tracking-[0.25em] text-ember-soft">
             <i data-lucide="flame" class="h-3.5 w-3.5"></i> SINCE 1995 · 現點現煎
@@ -168,6 +169,13 @@
             </a>
           </div>
         </div>
+
+        <!-- 海報完整顯示 -->
+        <figure class="reveal mx-auto w-full max-w-sm lg:max-w-md">
+          <img src="images/hero-poster.jpg" width="640" height="800" fetchpriority="high"
+               alt="鍋貼品牌菜單海報：開胃菜、主餐、加點、飲料、甜點，主標語「今天，貼一下？」"
+               class="img-fallback aspect-[4/5] w-full rounded-3xl object-cover shadow-2xl ring-1 ring-white/15 lg:rotate-1" />
+        </figure>
       </div>
 
       <a href="#story" class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-xs tracking-widest text-wood/60 md:flex" aria-label="向下捲動">
