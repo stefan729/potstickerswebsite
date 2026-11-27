@@ -5,7 +5,7 @@
 
    - Three.js r170（CDN），捲動到區塊附近才下載，不拖慢首頁
    - 離開畫面或切換分頁時自動暫停
-   - 系統設定「減少動態效果」時只顯示靜態畫面
+   - 系統設定「減少動態效果」時鏡頭不擺動，人物照常走動
 ========================================================= */
 
 const THREE_URLS = [
@@ -1060,8 +1060,9 @@ async function createStreet(THREE, el) {
     }
 
     // 鏡頭：緩慢擺動 + 滑鼠 / 手指
-    auto.yaw = Math.sin(t * 0.11) * 0.09;
-    auto.pitch = Math.sin(t * 0.07) * 0.012;
+    // 偏好減少動態效果時，鏡頭不自動擺動（人物照常走動）
+    auto.yaw = reduceMotion ? 0 : Math.sin(t * 0.11) * 0.09;
+    auto.pitch = reduceMotion ? 0 : Math.sin(t * 0.07) * 0.012;
     pointer.yaw += (pointer.tYaw - pointer.yaw) * Math.min(1, dt * 3);
     pointer.pitch += (pointer.tPitch - pointer.pitch) * Math.min(1, dt * 3);
     if (!dragging) pointer.tYaw *= touchMode ? Math.max(0, 1 - dt * 0.35) : 1;
@@ -1080,7 +1081,7 @@ async function createStreet(THREE, el) {
   if (hint) hint.textContent = fineHover ? '移動滑鼠，換個角度看看' : '左右滑動，換個角度看看';
   const interacted = () => el.classList.add('is-interacted');
 
-  if (!reduceMotion) {
+  {
     canvas.addEventListener('pointermove', (e) => {
       if (e.pointerType === 'mouse') {
         const r = canvas.getBoundingClientRect();
@@ -1137,7 +1138,7 @@ async function createStreet(THREE, el) {
     renderer.render(scene, camera);
   }
   function setRunning(on) {
-    if (reduceMotion || on === running) return;
+    if (on === running) return;
     running = on;
     if (on) {
       clock.start();
@@ -1150,16 +1151,7 @@ async function createStreet(THREE, el) {
 
   // 開始
   seed();
-  if (reduceMotion) {
-    // 靜態畫面：讓路人停在跨步的姿勢
-    people.forEach((p) => {
-      if (p.state === 'passing') { p.walk = 0.8; p.phase = rand(0.6, 1.2); }
-      stepPerson(p, 0, 0);
-    });
-    for (const s of steam) { s.material.opacity = 0.25; s.position.set(GRIDDLE.x + s.userData.ox, GRIDDLE.y + 0.1 + s.userData.life, GRIDDLE.z); }
-  } else {
-    update(0.016);
-  }
+  update(0.016);
   resize();
   new ResizeObserver(() => resize()).observe(el);
   renderer.render(scene, camera);
